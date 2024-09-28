@@ -142,7 +142,10 @@ return [
      |
      */
 
-    'vite' => [],
+    'vite' => [
+        'resources/css/app.css',
+        'resources/js/app.js',
+    ],
 
     /*
      |--------------------------------------------------------------------------
@@ -160,8 +163,8 @@ return [
      */
 
     'template' => [
-        'header' => '',
-        'footer' => '',
+        'header' => 'brand.header',
+        'footer' => 'brand.footer',
     ],
 
     /*
