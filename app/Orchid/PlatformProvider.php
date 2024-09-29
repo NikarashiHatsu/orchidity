@@ -69,8 +69,12 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('Tasks')
                 ->icon('bag')
                 ->route('platform.task')
-                ->divider()
                 ->title('Tools'),
+
+            Menu::make('State')
+                ->icon('toggle-on')
+                ->divider()
+                ->route('platform.state'),
 
             Menu::make(__('Users'))
                 ->icon('bs.people')

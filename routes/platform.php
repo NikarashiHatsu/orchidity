@@ -106,3 +106,7 @@ Route::screen('/examples/cards', ExampleCardsScreen::class)->name('platform.exam
 Route::screen('/task', \App\Orchid\Screens\TaskScreen::class)
     ->name('platform.task')
     ->breadcrumbs(fn (Trail $trail) => $trail->parent('platform.index')->push('Task'));
+
+Route::screen('/state', \App\Orchid\Screens\StateScreen::class)
+    ->name('platform.state')
+    ->breadcrumbs(fn (Trail $trail) => $trail->parent('platform.index')->push('State'));
