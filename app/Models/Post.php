@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Orchid\Attachment\Attachable;
 use Orchid\Screen\AsSource;
 
 class Post extends Model
 {
-    use HasFactory, AsSource;
+    use HasFactory, AsSource, Attachable;
 
     public function author(): BelongsTo
     {
@@ -18,6 +19,7 @@ class Post extends Model
 
     protected $fillable = [
         'author_id',
+        'hero',
         'title',
         'description',
         'body',

@@ -6,16 +6,18 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\Cropper;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Relation;
+use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class PostEditScreen extends Screen
 {
-    public ?Post $post = null;
+    public $post;
 
     /**
      * Fetch data to be displayed on the screen.
@@ -36,7 +38,7 @@ class PostEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return ! empty($this->post)
+        return $this->post->exists
             ? 'Edit post'
             : 'Create a new post';
     }
@@ -57,17 +59,17 @@ class PostEditScreen extends Screen
             Button::make('Create post')
                 ->icon('plus')
                 ->method('createOrUpdate')
-                ->canSee(empty($this->post)),
+                ->canSee(! $this->post->exists),
 
             Button::make('Edit post')
                 ->icon('pen')
                 ->method('createOrUpdate')
-                ->canSee(! empty($this->post)),
+                ->canSee($this->post->exists),
 
             Button::make('Remove post')
                 ->icon('trash')
                 ->method('remove')
-                ->canSee(! empty($this->post)),
+                ->canSee($this->post->exists),
         ];
     }
 
@@ -85,6 +87,12 @@ class PostEditScreen extends Screen
                     ->placeholder('Attractive but mysterious title')
                     ->help('Specify a short descriptive list for this post.'),
 
+                Cropper::make('post.hero')
+                    ->title('Large web banner image, generally in the front and center')
+                    ->width(1000)
+                    ->height(500)
+                    ->targetId(),
+
                 Input::make('post.description')
                     ->title('Description')
                     ->rows(3)
@@ -97,6 +105,9 @@ class PostEditScreen extends Screen
 
                 Quill::make('post.body')
                     ->title('Main text'),
+
+                Upload::make('post.attachments')
+                    ->title('All files'),
             ]),
         ];
     }
@@ -111,16 +122,18 @@ class PostEditScreen extends Screen
         ]);
 
         try {
-            empty($this->post)
-                ? Post::create($request->get('post'))
-                : $this->post->update($request->get('post'));
+            $this->post->fill($request->get('post'))->save();
+
+            $this->post->attachments()->syncWithoutDetaching(
+                $request->input('post.attachments', []),
+            );
         } catch (\Throwable $th) {
             Alert::error('An error occurred: ' . $th->getMessage());
 
             return;
         }
 
-        Alert::success(empty($this->post)
+        Alert::success($this->post->exists
             ? 'Post created'
             : 'Post updated');
     }
@@ -128,7 +141,7 @@ class PostEditScreen extends Screen
     public function remove()
     {
         try {
-            $this->post?->delete();
+            $this->post->delete();
         } catch (\Throwable $th) {
             Alert::error('An error occurred: ' . $th->getMessage());
 
