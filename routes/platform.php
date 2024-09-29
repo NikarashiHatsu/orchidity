@@ -110,3 +110,11 @@ Route::screen('/task', \App\Orchid\Screens\TaskScreen::class)
 Route::screen('/state', \App\Orchid\Screens\StateScreen::class)
     ->name('platform.state')
     ->breadcrumbs(fn (Trail $trail) => $trail->parent('platform.index')->push('State'));
+
+Route::screen('/post/{post?}', \App\Orchid\Screens\PostEditScreen::class)
+    ->name('platform.post.edit')
+    ->breadcrumbs(fn (Trail $trail) => $trail->parent('platform.post.list')->push('Post Edit'));
+
+Route::screen('/posts', \App\Orchid\Screens\PostListScreen::class)
+    ->name('platform.post.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail->parent('platform.index')->push('Post'));

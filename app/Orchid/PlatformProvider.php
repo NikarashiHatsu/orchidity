@@ -63,8 +63,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make('Cards')
                 ->icon('bs.card-text')
-                ->route('platform.example.cards')
-                ->divider(),
+                ->route('platform.example.cards'),
 
             Menu::make('Tasks')
                 ->icon('bag')
@@ -73,8 +72,12 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make('State')
                 ->icon('toggle-on')
-                ->divider()
                 ->route('platform.state'),
+
+            Menu::make('Posts')
+                ->icon('newspaper')
+                ->route('platform.post.list')
+                ->divider(),
 
             Menu::make(__('Users'))
                 ->icon('bs.people')
